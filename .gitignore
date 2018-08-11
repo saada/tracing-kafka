@@ -1,0 +1,16 @@
+.gradle
+.classpath
+.project
+.settings
+bin
+build
+
+# Ignore Gradle GUI config
+gradle-app.setting
+*.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
