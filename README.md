@@ -7,8 +7,8 @@
 
 ```sh
 docker-compose up
-cd ServiceA
-./gradlew run
+cd services/ChatWebApp
+./gradlew build && java -jar build/libs/chat-0.1.0.jar
 ```
 
 ## Add new service
@@ -22,10 +22,14 @@ gradle init --type java-application
 
 ## TODOs
 
-[] mention Container Hive and interest in observability and tracing
-[] demo
-[] break down demo into pieces
-[] gradle project with random timeouts
-[] helm chart for gradle project
-[] multiple deployments of helm charts
-[] makefile to automate everything
+* [] slides
+  * [] mention Container Hive and interest in observability and tracing
+  * [] mention alternatives for instrumentation (import company wide library)
+* [] demo
+  - [x] break down demo into pieces
+  * [] show chat app
+  * [] ngrok during demo and share URL for everyone to participate
+  * [] pass metadata from each user as baggage
+* [] gradle project with random timeouts
+* [] helm chart for gradle project
+* [] makefile to automate everything
