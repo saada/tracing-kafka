@@ -1,28 +1,13 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
-import styled, { injectGlobal } from "styled-components"
 import ChatRoom from "./components/ChatRoom"
-
-injectGlobal`
-  html {
-    background-color: black;
-    color: cyan;
-    font-size: 20px;
-  }
-
-  * {
-    margin: 6px;
-  }
-`
-
-const Page = styled.div``
-
-const Header = styled.div`
-  font-size: 5em;
-`
+import UserInput from "./components/UserInput"
+import { sendMessage } from "./actions/Messages"
+import { Page, Header, HorizontalLayout } from "./components/Styled"
 
 class App extends Component {
   state = {
+    title: "Kafka Chat",
     user: "guest-" + Math.floor(Math.random() * 1000),
     room: {
       name: "lobby",
@@ -31,7 +16,7 @@ class App extends Component {
           id: "a",
           date: "2018-08-16T08:00:31-04:00",
           author: "Ralph",
-          message: "Hey, there!"
+          message: "👋 Hey, there!"
         },
         {
           id: "b",
@@ -41,27 +26,45 @@ class App extends Component {
           image: "https://media.giphy.com/media/l3fQhqrUsJUWs7b0c/giphy.gif"
         }
       ]
-    },
-    chatInput: "Sample input 😊"
+    }
   }
 
   userInputChange(e) {
     this.setState({ user: e.target.value })
   }
 
+  send(message) {
+    if (message) {
+      sendMessage(this.state.user, this.state.room.name, message).then(
+        savedMessage => {
+          this.setState(state => {
+            state.room.messages.push(savedMessage)
+            return state
+          })
+        }
+      )
+    }
+  }
+
   render() {
     return (
-      <Page>
-        <Header>Chat</Header>
-        <label>User</label>
-        <input
-          type="text"
-          name="user"
-          value={this.state.user}
-          onChange={e => this.userInputChange(e)}
-        />
-        <ChatRoom room={this.state.room} messages={this.state.messages} />
-      </Page>
+      <HorizontalLayout justifyContent="center">
+        <Page>
+          <title>{this.state.title}</title>
+          <HorizontalLayout>
+            <Header>{this.state.title}</Header>
+            <UserInput
+              user={this.state.user}
+              onChange={e => this.userInputChange(e)}
+            />
+          </HorizontalLayout>
+          <ChatRoom
+            room={this.state.room}
+            messages={this.state.messages}
+            sendMessage={message => this.send(message)}
+          />
+        </Page>
+      </HorizontalLayout>
     )
   }
 }
