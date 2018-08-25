@@ -8,6 +8,7 @@ import {
   MessageText,
   HorizontalLayout,
   MessageWrapper,
+  Image,
   ImageWrapper
 } from "./Styled"
 
@@ -21,7 +22,7 @@ export default ({ message }) => (
       <TimeAgo>{dayjs(message.date).fromNow()}</TimeAgo>
     </HorizontalLayout>
     <ImageWrapper>
-      {message.image ? <img src={message.image} height="200" /> : null}
+      {message.image ? <Image src={message.image} /> : null}
     </ImageWrapper>
   </MessageWrapper>
 )

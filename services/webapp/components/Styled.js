@@ -1,19 +1,15 @@
 import styled, { injectGlobal } from "styled-components"
 const mainColor = "#0a5"
 const secondaryColor = "white"
-const pageWidth = "800"
+const pageWidth = "40em"
 
 injectGlobal`
   html {
     background-color: white;
     color: black;
-    font-size: 20px;
+    font-size: 1.3vw;
     font-family: 'Lato', sans-serif;
   }
-
-  /* * {
-    margin: 3px;
-  } */
 `
 
 export const Space = styled.div`
@@ -22,7 +18,6 @@ export const Space = styled.div`
 `
 
 export const Page = styled.div`
-  width: ${pageWidth}px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -46,7 +41,7 @@ export const RoomName = styled.h2`
 `
 
 export const MessageList = styled.ul`
-  width: ${pageWidth}px
+  width: ${pageWidth}
   list-style-type: none;
   padding-left: 0;
 `
@@ -56,6 +51,10 @@ export const MessageWrapper = styled.li`
   &:hover {
     color: ${mainColor};
   }
+`
+
+export const Image = styled.img`
+  height: 10em;
 `
 
 export const ImageWrapper = styled.div`
@@ -95,7 +94,7 @@ export const NicknameInput = styled.input`
 
 export const MessageInput = styled.input`
   margin-top: 0;
-  width: ${pageWidth - 50}px;
+  width: 46.8em;
   height: 32px;
   line-height: 32px;
   padding-left: 8px;

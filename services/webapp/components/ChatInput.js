@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Button, MessageInput } from "./Styled"
-
 export default class ChatInput extends Component {
   state = {
     message: ""

@@ -4,6 +4,7 @@ import ChatRoom from "./components/ChatRoom"
 import UserInput from "./components/UserInput"
 import { sendMessage } from "./actions/Messages"
 import { Page, Header, HorizontalLayout } from "./components/Styled"
+import ErrorBoundary from "./components/ErrorBoundary"
 
 class App extends Component {
   state = {
@@ -58,11 +59,13 @@ class App extends Component {
               onChange={e => this.userInputChange(e)}
             />
           </HorizontalLayout>
-          <ChatRoom
-            room={this.state.room}
-            messages={this.state.messages}
-            sendMessage={message => this.send(message)}
-          />
+          <ErrorBoundary>
+            <ChatRoom
+              room={this.state.room}
+              messages={this.state.messages}
+              sendMessage={message => this.send(message)}
+            />
+          </ErrorBoundary>
         </Page>
       </HorizontalLayout>
     )
