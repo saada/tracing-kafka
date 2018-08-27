@@ -32,10 +32,6 @@ public class App {
     private final static String JAEGER_AGENT_HOST = "localhost";
     private final static String GIPHY_API_TOKEN = "DhFQzq6E4uSzDgx6FFmTC0xqV0iFYDFK";
 
-    public String getGreeting() {
-        return "Starting ServiceA";
-    }
-
     private static Producer<Integer, String> createProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
@@ -59,8 +55,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-        Tracer tracer = new JaegerTracer.Builder("myServiceName").build();
+        Tracer tracer = new JaegerTracer.Builder("storage-service").build();
         GlobalTracer.register(tracer);
 
         Producer<Integer, String> producer = getTracedProducer(createProducer());

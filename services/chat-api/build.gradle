@@ -15,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
 bootJar {
-    baseName = 'chat'
+    baseName = 'chat-api'
     version =  '0.1.0'
 }
 
@@ -27,7 +27,6 @@ dependencies {
     compile 'org.apache.kafka:kafka-clients:2.0.0'
     compile 'io.jaegertracing:jaeger-client:0.30.3'
     compile 'io.opentracing.contrib:opentracing-kafka-client:0.0.12'
-    // compile 'io.opentracing.contrib:opentracing-redis-lettuce:0.0.5'
     compile 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.2.0'
     compile 'io.jaegertracing:jaeger-client:0.30.3'
 

@@ -7,7 +7,7 @@
 
 ```sh
 docker-compose up
-cd services/ChatWebApp
+cd services/chat-api
 ./gradlew build && java -jar build/libs/chat-0.1.0.jar
 ```
 
