@@ -1,5 +1,7 @@
 import dayjs from "dayjs"
 
+const chatApiUrl = "http://localhost:8080"
+
 export const postData = (url = "", data = {}) => {
   // Default options are marked with *
   return fetch(url, {
@@ -35,7 +37,7 @@ export const sendMessage = (author, room, message) => {
   //   author,
   //   message
   // })
-  return postData("http://localhost:8080/message", {
+  return postData(`${chatApiUrl}/message`, {
     author,
     room,
     message

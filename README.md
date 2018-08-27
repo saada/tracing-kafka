@@ -22,14 +22,22 @@ gradle init --type java-application
 
 ## TODOs
 
-* [] slides
-  * [] mention Container Hive and interest in observability and tracing
-  * [] mention alternatives for instrumentation (import company wide library)
-* [] demo
+- [ ] slides
+  - [x] mention Container Hive and interest in observability and tracing
+- [ ] demo
   - [x] break down demo into pieces
-  * [] show chat app
-  * [] ngrok during demo and share URL for everyone to participate
-  * [] pass metadata from each user as baggage
-* [] gradle project with random timeouts
-* [] helm chart for gradle project
-* [] makefile to automate everything
+  - [x] show chat app
+  - [x] ngrok during demo and share URL for everyone to participate
+  - [ ] pass metadata from each user as baggage
+- [x] makefile to automate everything
+
+## Features
+
+- [x] Webapp
+- [ ] Chat API
+  - [ ] Get Messages
+  - [x] Create Message
+  - [ ] Delete Message
+- [ ] Storage Service (Redis)
+- [ ] GIF Service
+- [ ] NoFucks Service (fuck -> f#*$)

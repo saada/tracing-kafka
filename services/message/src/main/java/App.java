@@ -3,6 +3,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -16,6 +18,7 @@ import io.jaegertracing.Configuration.ReporterConfiguration;
 import io.jaegertracing.Configuration.SamplerConfiguration;
 import io.jaegertracing.Configuration.SenderConfiguration;
 import io.jaegertracing.internal.JaegerTracer;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 import io.opentracing.contrib.kafka.TracingKafkaProducer;
 import io.opentracing.util.GlobalTracer;
@@ -27,6 +30,7 @@ public class App {
     private final static String BOOTSTRAP_SERVERS = "localhost:9092";
     private final static String SINK_TOPIC = "serviceA-sink";
     private final static String JAEGER_AGENT_HOST = "localhost";
+    private final static String GIPHY_API_TOKEN = "DhFQzq6E4uSzDgx6FFmTC0xqV0iFYDFK";
 
     public String getGreeting() {
         return "Starting ServiceA";
@@ -69,9 +73,16 @@ public class App {
 
                 RecordMetadata metadata;
                 try {
-                    metadata = producer.send(record).get();
-                    System.out.printf("sent record(key=%s value=%s) meta(partition=%d,offset=%d)\n", record.key(),
-                            record.value(), metadata.partition(), metadata.offset());
+                    try (Scope scope = tracer.buildSpan("send-message").startActive(true)) {
+                        scope.span().setBaggageItem("message-id", randomString);
+
+                        metadata = producer.send(record).get();
+                        System.out.printf("sent record(key=%s value=%s) meta(partition=%d,offset=%d)\n", record.key(),
+                                record.value(), metadata.partition(), metadata.offset());
+                        scope.span().log(ImmutableMap.of("event", "send record", "record", record.value(), "partition",
+                                metadata.partition(), "offset", metadata.offset()));
+                    }
+
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
