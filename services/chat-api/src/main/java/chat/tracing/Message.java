@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.lettuce.core.RedisClient;
@@ -41,16 +42,18 @@ public class Message {
   private String message;
   private String room;
   private String date;
+  private String image;
 
-  Message(String id, String author, String message, String room, String date) {
+  Message(String id, String author, String message, String room, String date, String image) {
     this.id = id;
     this.author = author;
     this.message = message;
     this.room = room;
     this.date = date;
+    this.image = image;
   }
 
-  public void init() {
+  private void init() {
     this.id = UUID.randomUUID().toString();
     TimeZone tz = TimeZone.getTimeZone("UTC");
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
@@ -78,6 +81,10 @@ public class Message {
     return this.date;
   }
 
+  public String getImage() {
+    return this.image;
+  }
+
   private static Consumer<Integer, String> createConsumer() throws UnknownHostException {
     final Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -102,18 +109,28 @@ public class Message {
     StatefulRedisConnection<String, String> connection = new TracingStatefulRedisConnection<>(client.connect(), GlobalTracer.get(), false);
     RedisCommands<String, String> syncCommands = connection.sync();
     List<String> ids = syncCommands.zrange(room, 0, -1);
-    List<Message> messages = new ArrayList();
-    ids.forEach(id -> {
-      String jsonString = syncCommands.get("message:" + id);
-      JsonParser jsonParser = new JsonParser();
-      JsonObject json = (JsonObject)jsonParser.parse(jsonString);
-      messages.add(new Message(
-              json.get("id").getAsString(),
-              json.get("author").getAsString(),
-              json.get("message").getAsString(),
-              json.get("room").getAsString(),
-              json.get("date").getAsString()));
-    });
+    List<Message> messages = new ArrayList<Message>();
+    try {
+      ids.forEach(id -> {
+        String jsonString = syncCommands.get("message:" + id);
+        JsonParser jsonParser = new JsonParser();
+        JsonObject json = (JsonObject) jsonParser.parse(jsonString);
+        String image = null;
+        if (!(json.get("image") instanceof JsonNull)) {
+          image = json.get("image").getAsString();
+        }
+        messages.add(new Message(
+                json.get("id").getAsString(),
+                json.get("author").getAsString(),
+                json.get("message").getAsString(),
+                json.get("room").getAsString(),
+                json.get("date").getAsString(),
+                image));
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      return messages;
+    }
     return messages;
   }
 

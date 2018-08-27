@@ -22,22 +22,17 @@ gradle init --type java-application
 
 ## TODOs
 
-- [ ] slides
-  - [x] mention Container Hive and interest in observability and tracing
-- [ ] demo
+- [x] demo
   - [x] break down demo into pieces
   - [x] show chat app
   - [x] ngrok during demo and share URL for everyone to participate
-  - [ ] pass metadata from each user as baggage
 - [x] makefile to automate everything
 
 ## Features
 
 - [x] Webapp
-- [ ] Chat API
-  - [ ] Get Messages
+- [x] Chat API
+  - [x] Get Messages
   - [x] Create Message
-  - [ ] Delete Message
-- [ ] Storage Service (Redis)
-- [ ] GIF Service
-- [ ] NoFucks Service (fuck -> f#*$)
+- [x] Storage Service (Redis)
+- [x] GIF Service
