@@ -29,6 +29,7 @@ dependencies {
     compile 'io.opentracing.contrib:opentracing-kafka-client:0.0.12'
     compile 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.2.0'
     compile 'io.jaegertracing:jaeger-client:0.30.3'
+    compile 'io.opentracing.contrib:opentracing-redis-lettuce:0.0.5'
 
     // Use JUnit test framework
     // testCompile 'junit:junit:4.12'

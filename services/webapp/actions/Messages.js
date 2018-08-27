@@ -44,4 +44,5 @@ export const sendMessage = (author, room, message) => {
   })
 }
 
-export const getMessages = () => fetch(url).then(response => response.json())
+export const getMessages = () =>
+  fetch(`${chatApiUrl}/message`).then(response => response.json())

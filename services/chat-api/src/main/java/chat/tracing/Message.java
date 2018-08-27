@@ -4,18 +4,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+import io.opentracing.contrib.redis.lettuce.TracingStatefulRedisConnection;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -41,6 +41,14 @@ public class Message {
   private String message;
   private String room;
   private String date;
+
+  Message(String id, String author, String message, String room, String date) {
+    this.id = id;
+    this.author = author;
+    this.message = message;
+    this.room = room;
+    this.date = date;
+  }
 
   public void init() {
     this.id = UUID.randomUUID().toString();
@@ -88,32 +96,25 @@ public class Message {
     return consumer;
   }
 
-  public static ConsumerRecords<Integer, String> getMessages(String topic) throws UnknownHostException {
-    // Decorate KafkaConsumer with TracingKafkaConsumer
-    Tracer tracer = GlobalTracer.get();
-    TracingKafkaConsumer<Integer, String> consumer = new TracingKafkaConsumer<>(createConsumer(), tracer);
-
-    // print list of topics
-    Map<String, List<PartitionInfo>> topics = consumer.listTopics();
-    for (String topicName : topics.keySet()) {
-      System.out.println("topic: " + topicName);
-    }
-
-    // consume messages from passed topic
-    consumer.subscribe(Collections.singletonList(topic));
-    ConsumerRecords<Integer, String> consumerRecords;
-    System.out.println("POLLING");
-    consumerRecords = consumer.poll(1000);
-    System.out.println("DONE POLLING");
-    consumerRecords.forEach(record -> {
-      System.out.printf("Consumer Record:(%d, %s, %d, %d)\n", record.key(), record.value(), record.partition(),
-          record.offset());
+  public static List<Message> getMessages(String room) throws UnknownHostException {
+    // redis client
+    RedisClient client = RedisClient.create("redis://localhost");
+    StatefulRedisConnection<String, String> connection = new TracingStatefulRedisConnection<>(client.connect(), GlobalTracer.get(), false);
+    RedisCommands<String, String> syncCommands = connection.sync();
+    List<String> ids = syncCommands.zrange(room, 0, -1);
+    List<Message> messages = new ArrayList();
+    ids.forEach(id -> {
+      String jsonString = syncCommands.get("message:" + id);
+      JsonParser jsonParser = new JsonParser();
+      JsonObject json = (JsonObject)jsonParser.parse(jsonString);
+      messages.add(new Message(
+              json.get("id").getAsString(),
+              json.get("author").getAsString(),
+              json.get("message").getAsString(),
+              json.get("room").getAsString(),
+              json.get("date").getAsString()));
     });
-
-    consumer.commitAsync();
-    consumer.close();
-    System.out.println("DONE");
-    return consumerRecords;
+    return messages;
   }
 
   public void create() {

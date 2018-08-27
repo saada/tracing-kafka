@@ -16,4 +16,5 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 node_modules
 .cache
+.idea
 dist

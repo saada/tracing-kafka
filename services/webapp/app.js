@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import ChatRoom from "./components/ChatRoom"
 import UserInput from "./components/UserInput"
-import { sendMessage } from "./actions/Messages"
+import { sendMessage, getMessages } from "./actions/Messages"
 import { Page, Header, HorizontalLayout } from "./components/Styled"
 import ErrorBoundary from "./components/ErrorBoundary"
 
@@ -28,6 +28,26 @@ class App extends Component {
         }
       ]
     }
+  }
+
+  componentDidMount() {
+    this.refreshMessages()
+    this.interval = setInterval(() => {
+      this.refreshMessages()
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
+  }
+
+  refreshMessages() {
+    return getMessages().then(messages =>
+      this.setState(state => {
+        state.room.messages = messages
+        return state
+      })
+    )
   }
 
   userInputChange(e) {
