@@ -35,7 +35,6 @@ services:
     restart: on-failure
     depends_on:
       - cassandra-schema
-
   jaeger-query:
     image: jaegertracing/jaeger-query
     command:
@@ -46,7 +45,6 @@ services:
     restart: on-failure
     depends_on:
       - cassandra-schema
-
   jaeger-agent:
     image: jaegertracing/jaeger-agent
     command: ["--collector.host-port=jaeger-collector:14267"]
@@ -58,15 +56,12 @@ services:
     restart: on-failure
     depends_on:
       - jaeger-collector
-
   cassandra:
     image: cassandra:3.9
-
   cassandra-schema:
     image: jaegertracing/jaeger-cassandra-schema
     depends_on:
       - cassandra
-
   spark:
     image: jaegertracing/spark-dependencies
     deploy:
