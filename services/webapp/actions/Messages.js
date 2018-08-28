@@ -1,6 +1,7 @@
 import dayjs from "dayjs"
 
 const chatApiUrl = "http://localhost:8080"
+// const chatApiUrl = "http://16f5b228.ngrok.io"
 
 export const postData = (url = "", data = {}) => {
   // Default options are marked with *

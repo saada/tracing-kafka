@@ -116,6 +116,12 @@ public class App {
                     String room = json.get("room").getAsString();
                     String date = json.get("date").getAsString();
                     Long epoch = Instant.parse(date).getEpochSecond();
+                    // intentionally introduce delay here...
+                    // try {
+                    //     Thread.sleep(5000);
+                    // } catch (Exception e) {
+                    //     e.printStackTrace();
+                    // }
                     syncCommands.set("message:" + id, jsonString);
                     syncCommands.zadd(room, epoch.doubleValue(), id);
                 }
