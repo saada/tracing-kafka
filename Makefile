@@ -9,3 +9,5 @@ storage:
 	cd services/storage-service && ./gradlew run
 giphy:
 	cd services/giphy-service && ./gradlew run
+spark:
+	docker-compose run spark

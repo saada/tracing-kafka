@@ -1,23 +1,20 @@
 # Tracing Kafka
 
-- What is open tracing?
-- Why trace Kafka?
-
 ## Setup
 
 ```sh
-docker-compose up
-cd services/chat-api
-./gradlew build && java -jar build/libs/chat-0.1.0.jar
-```
-
-## Add new service
-
-```sh
-mkdir Service{A,B,C,D}
-# repeat for each service
-cd ServiceA
-gradle init --type java-application
+# terminal 1
+make compose
+# terminal 2
+make webapp
+# terminal 3
+make chatapi
+# terminal 4
+make storage
+# terminal 5
+make giphy
+# to generate directed graph manually
+make spark
 ```
 
 ## TODOs
